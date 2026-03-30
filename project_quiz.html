@@ -1015,14 +1015,7 @@ function repeatSameType() {
   if (currentType) startQuiz(currentType);
 }
 
-function toggleCard(idx) {
-  const details = document.getElementById('hdetails-'+idx);
-  const toggle = document.getElementById('htoggle-'+idx);
-  if (!details) return;
-  const open = details.style.display === 'none';
-  details.style.display = open ? 'block' : 'none';
-  if (toggle) toggle.textContent = open ? '▾ скрыть' : '▸ детали';
-}
+
 </script>
 </body>
 </html>
