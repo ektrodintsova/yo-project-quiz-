@@ -423,6 +423,13 @@
   .setup-banner { padding:14px 16px; background:#FEF3E2; border-radius:10px; border:1.5px solid #FAC775; font-size:13px; color:#633806; line-height:1.6; margin-bottom:20px; }
   .setup-banner strong { display:block; margin-bottom:4px; }
   .setup-banner code { background:#F9E0A8; padding:1px 5px; border-radius:3px; font-size:12px; }
+
+  .history-expand { font-size:12px; color:#AEAAA3; transition:transform .15s; }
+  .history-detail { margin-top:10px; padding-top:10px; border-top:1px solid #F2F0EB; }
+  .detail-comment { font-size:13px; color:#6B6762; margin-bottom:10px; line-height:1.5; font-style:italic; }
+  .detail-grid { display:flex; flex-direction:column; gap:4px; }
+  .detail-row { display:grid; grid-template-columns:130px 1fr; gap:8px; font-size:13px; padding:3px 0; }
+  .detail-k { color:#AEAAA3; font-weight:500; }
 </style>
 </head>
 <body>
@@ -778,6 +785,14 @@ function switchTab(tab) {
   if (isHistory) renderHistory();
 }
 
+
+function toggleCard(idx) {
+  const detail = document.getElementById('detail-'+idx);
+  const arrow = document.getElementById('expand-'+idx);
+  const isOpen = detail.style.display !== 'none';
+  detail.style.display = isOpen ? 'none' : 'block';
+  arrow.textContent = isOpen ? '▸' : '▾';
+}
 function renderHistory() {
   const search = document.getElementById('histSearch').value.toLowerCase();
   const filterSize = document.getElementById('histFilterSize').value;
@@ -794,20 +809,32 @@ function renderHistory() {
     list.innerHTML = '<div class="history-empty">Расчётов пока нет.<br>Заполни квиз и калькулятор — нажми «Сохранить».</div>';
     return;
   }
-  list.innerHTML = items.map(i => `
-    <div class="history-card">
+  list.innerHTML = items.map((i,idx) => `
+    <div class="history-card" onclick="toggleCard(${idx})">
       <div class="history-card-top">
         <div class="history-card-name">${i.project || 'Без названия'}</div>
-        <div class="history-card-date">${i.date || ''}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="history-card-date">${i.date || ''}</div>
+          <div class="history-expand" id="expand-${idx}">▸</div>
+        </div>
       </div>
       <div class="history-card-meta">
         <span class="history-tag size-${i.size}">${i.size}</span>
         <span class="history-tag score">${i.score} б</span>
         <span class="history-tag grade">${i.grade}</span>
-        ${i.intl ? '<span class="history-tag intl">🌐 Международный</span>' : ''}
+        ${i.intl ? '<span class="history-tag intl">🌐 Межд.</span>' : ''}
         ${i.pm ? '<span class="history-pm">PM: '+i.pm+'</span>' : ''}
       </div>
-      ${i.comment ? '<div style="margin-top:6px;font-size:13px;color:#6B6762;line-height:1.5;padding-top:6px;border-top:1px solid #F2F0EB">'+i.comment+'</div>' : ''}
+      <div class="history-detail" id="detail-${idx}" style="display:none">
+        ${i.comment ? '<div class="detail-comment">'+i.comment+'</div>' : ''}
+        <div class="detail-grid">
+          <div class="detail-row"><span class="detail-k">Размер</span><span>${i.size} (${i.sizePts||'—'} б)</span></div>
+          <div class="detail-row"><span class="detail-k">Новизна</span><span>${i.launchLabel||'—'} (×${i.launchK||'—'})</span></div>
+          ${i.details && i.paramNames ? Object.keys(i.details).map(k =>
+            '<div class="detail-row"><span class="detail-k">'+i.paramNames[k]+'</span><span>'+i.details[k]+'</span></div>'
+          ).join('') : ''}
+          <div class="detail-row" style="font-weight:500;border-top:1px solid #E0DDD6;margin-top:4px;padding-top:8px"><span class="detail-k">Итог</span><span>${i.score} б → ${i.grade}</span></div>
+        </div>
       </div>
     </div>
   `).join('');
@@ -828,7 +855,27 @@ function confirmSave() {
   const size = sizeBtn ? sizeBtn.textContent.replace(/\d+.*/, '').trim() : '?';
   const intl = calcParams.intl > 0;
   const comment = document.getElementById('saveComment').value.trim();
-  saveToHistory({ pm, project, score, grade, size, intl, comment });
+  const launchBtn = document.querySelector('.launch-btn.selected');
+  const launchLabel = launchBtn ? launchBtn.childNodes[0].textContent.trim() : '';
+  const launchK = calcLaunchK;
+  const paramLabels = {
+    st:   ['1–2','3–5','6–10','10+'],
+    un:   ['Шаблон есть','Частичная','Высокая','Критическая'],
+    dl:   ['Гибкий','Умеренный','Жёсткий'],
+    aud:  ['до 100','100–1к','1к–10к','10к+'],
+    str:  ['Операционная','Для стрима','Для компании','Флагман'],
+    team: ['Нет','1–2 чел.','3–5 чел.','6+'],
+    goal: ['Заданы сверху','Участвует','Сам ставит','Цели стрима'],
+    intl: ['Нет','Да, впервые','Да, повторно'],
+  };
+  const paramNames = {st:'Стейкхолдеры',un:'Неопределённость',dl:'Дедлайн',aud:'Охват',str:'Значимость',team:'Команда',goal:'Целеполагание',intl:'Международный'};
+  const paramVals = [0,3,6,8];
+  const details = {};
+  Object.keys(calcParams).forEach(k => {
+    const btn = document.querySelector(`.param-opts button.selected[onclick*="'${k}'"]`);
+    details[k] = btn ? btn.childNodes[0].textContent.trim() : '—';
+  });
+  saveToHistory({ pm, project, score, grade, size, intl, comment, launchLabel, launchK, sizePts: calcSizePts, details, paramNames });
   document.getElementById('saveForm').style.display = 'none';
   document.getElementById('savePm').value = '';
   document.getElementById('saveProject').value = '';
@@ -957,6 +1004,15 @@ function resetToTypes() {
 
 function repeatSameType() {
   if (currentType) startQuiz(currentType);
+}
+
+function toggleCard(idx) {
+  const details = document.getElementById('hdetails-'+idx);
+  const toggle = document.getElementById('htoggle-'+idx);
+  if (!details) return;
+  const open = details.style.display === 'none';
+  details.style.display = open ? 'block' : 'none';
+  if (toggle) toggle.textContent = open ? '▾ скрыть' : '▸ детали';
 }
 </script>
 </body>
