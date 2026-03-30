@@ -395,7 +395,7 @@
   .history-filter { padding:9px 14px; border-radius:8px; border:1.5px solid #E0DDD6; font-family:'Golos Text',sans-serif; font-size:14px; background:#FAFAF8; color:#0F0F0F; cursor:pointer; }
   .history-empty { text-align:center; padding:48px 0; color:#AEAAA3; font-size:14px; }
   .history-list { display:flex; flex-direction:column; gap:10px; }
-  .history-card { padding:14px 16px; border-radius:10px; border:1.5px solid #E0DDD6; background:#FAFAF8; cursor:pointer; transition:border-color .15s; }
+  .history-card { padding:14px 16px; border-radius:10px; border:1.5px solid #E0DDD6; background:#FAFAF8; cursor:pointer; transition:border-color .15s; user-select:none; }
   .history-card:hover { border-color:#0F0F0F; }
   .history-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
   .history-card-name { font-size:14px; font-weight:600; color:#0F0F0F; }
@@ -424,7 +424,7 @@
   .setup-banner strong { display:block; margin-bottom:4px; }
   .setup-banner code { background:#F9E0A8; padding:1px 5px; border-radius:3px; font-size:12px; }
 
-  .history-expand { font-size:12px; color:#AEAAA3; transition:transform .15s; }
+  .history-expand { font-size:12px; color:#AEAAA3; transition:transform .15s; cursor:pointer; user-select:none; }
   .history-detail { margin-top:10px; padding-top:10px; border-top:1px solid #F2F0EB; }
   .detail-comment { font-size:13px; color:#6B6762; margin-bottom:10px; line-height:1.5; font-style:italic; }
   .detail-grid { display:flex; flex-direction:column; gap:4px; }
@@ -749,7 +749,7 @@ function updateCalc() {
 
 // ── GOOGLE SHEETS CONFIG ──────────────────────────────────────
 // Вставь сюда URL своего Apps Script после настройки (см. SETUP.md)
-const SHEETS_URL = 'https://script.google.com/a/macros/yandex-team.ru/s/AKfycbzNFTSods-u8qh2drK56rWdPhhZfIbJ-tbh42Kn4tKRjw8LvvkvTU90l3z8oAqTQscROA/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz6wsdMdGZakQH81-0QHHO7Xk5JF5BwpsGtuqZPIzRTPRc843Fqm7c2Gt11EknzTrhe/exec';
 // ─────────────────────────────────────────────────────────────
 
 const HISTORY_KEY = 'yo_project_history';
@@ -786,12 +786,20 @@ function switchTab(tab) {
 }
 
 
+function deleteEntry(id) {
+  if (!confirm('Удалить этот расчёт?')) return;
+  const h = getHistory().filter(i => i.id !== id);
+  localStorage.setItem('yo_project_history', JSON.stringify(h));
+  renderHistory();
+}
+
 function toggleCard(idx) {
   const detail = document.getElementById('detail-'+idx);
   const arrow = document.getElementById('expand-'+idx);
+  if (!detail) return;
   const isOpen = detail.style.display !== 'none';
   detail.style.display = isOpen ? 'none' : 'block';
-  arrow.textContent = isOpen ? '▸' : '▾';
+  if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
 }
 function renderHistory() {
   const search = document.getElementById('histSearch').value.toLowerCase();
@@ -813,9 +821,10 @@ function renderHistory() {
     <div class="history-card" onclick="toggleCard(${idx})">
       <div class="history-card-top">
         <div class="history-card-name">${i.project || 'Без названия'}</div>
-        <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
           <div class="history-card-date">${i.date || ''}</div>
-          <div class="history-expand" id="expand-${idx}">▸</div>
+          <div class="history-expand" id="expand-${idx}">▸ детали</div>
+          <div onclick="event.stopPropagation();deleteEntry(${i.id})" style="font-size:12px;color:#AEAAA3;cursor:pointer;padding:2px 4px;border-radius:4px" onmouseover="this.style.color='#E24B4A'" onmouseout="this.style.color='#AEAAA3'">✕</div>
         </div>
       </div>
       <div class="history-card-meta">
