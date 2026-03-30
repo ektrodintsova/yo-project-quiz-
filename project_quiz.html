@@ -793,14 +793,7 @@ function deleteEntry(id) {
   renderHistory();
 }
 
-function toggleCard(idx) {
-  const detail = document.getElementById('detail-'+idx);
-  const arrow = document.getElementById('expand-'+idx);
-  if (!detail) return;
-  const isOpen = detail.style.display !== 'none';
-  detail.style.display = isOpen ? 'none' : 'block';
-  if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
-}
+
 function renderHistory() {
   const search = document.getElementById('histSearch').value.toLowerCase();
   const filterSize = document.getElementById('histFilterSize').value;
@@ -818,32 +811,37 @@ function renderHistory() {
     return;
   }
   list.innerHTML = items.map((i,idx) => `
-    <div class="history-card" onclick="toggleCard(${idx})">
+    <div class="history-card">
       <div class="history-card-top">
         <div class="history-card-name">${i.project || 'Без названия'}</div>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="history-card-date">${i.date || ''}</div>
-          <div class="history-expand" id="expand-${idx}">▸ детали</div>
-          <div onclick="event.stopPropagation();deleteEntry(${i.id})" style="font-size:12px;color:#AEAAA3;cursor:pointer;padding:2px 4px;border-radius:4px" onmouseover="this.style.color='#E24B4A'" onmouseout="this.style.color='#AEAAA3'">✕</div>
+          <div onclick="event.stopPropagation();deleteEntry(${i.id})" style="font-size:12px;color:#AEAAA3;cursor:pointer;padding:2px 6px;border-radius:4px" onmouseover="this.style.color='#E24B4A'" onmouseout="this.style.color='#AEAAA3'">✕</div>
         </div>
       </div>
-      <div class="history-card-meta">
+      <div class="history-card-meta" style="margin-bottom:10px">
         <span class="history-tag size-${i.size}">${i.size}</span>
         <span class="history-tag score">${i.score} б</span>
         <span class="history-tag grade">${i.grade}</span>
         ${i.intl ? '<span class="history-tag intl">🌐 Межд.</span>' : ''}
         ${i.pm ? '<span class="history-pm">PM: '+i.pm+'</span>' : ''}
       </div>
-      <div class="history-detail" id="detail-${idx}" style="display:none">
-        ${i.comment ? '<div class="detail-comment">'+i.comment+'</div>' : ''}
-        <div class="detail-grid">
-          <div class="detail-row"><span class="detail-k">Размер</span><span>${i.size} (${i.sizePts||'—'} б)</span></div>
-          <div class="detail-row"><span class="detail-k">Новизна</span><span>${i.launchLabel||'—'} (×${i.launchK||'—'})</span></div>
-          ${i.details && i.paramNames ? Object.keys(i.details).map(k =>
-            '<div class="detail-row"><span class="detail-k">'+i.paramNames[k]+'</span><span>'+i.details[k]+'</span></div>'
-          ).join('') : ''}
-          <div class="detail-row" style="font-weight:500;border-top:1px solid #E0DDD6;margin-top:4px;padding-top:8px"><span class="detail-k">Итог</span><span>${i.score} б → ${i.grade}</span></div>
-        </div>
+      <div style="display:flex;flex-direction:column;gap:4px;font-size:13px;border-top:1px solid #F2F0EB;padding-top:10px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Размер</span><span style="font-weight:500">${i.size}${i.sizePts ? ' · '+i.sizePts+' б' : ''}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Новизна</span><span style="font-weight:500">${i.launchLabel || '—'}${i.launchK ? ' · ×'+i.launchK : ''}</span></div>
+        ${i.details && i.paramNames ? Object.keys(i.details).map(k =>
+          '<div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">'+i.paramNames[k]+'</span><span style="font-weight:500">'+i.details[k]+'</span></div>'
+        ).join('') : (i.params ? `
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Стейкхолдеры</span><span style="font-weight:500">${i.params.st||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Неопределённость</span><span style="font-weight:500">${i.params.un||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Дедлайн</span><span style="font-weight:500">${i.params.dl||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Охват</span><span style="font-weight:500">${i.params.aud||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Значимость</span><span style="font-weight:500">${i.params.str||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Команда</span><span style="font-weight:500">${i.params.team||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Целеполагание</span><span style="font-weight:500">${i.params.goal||'—'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#AEAAA3">Международный</span><span style="font-weight:500">${i.params.intlLabel||'Нет'}</span></div>
+        ` : '<div style="color:#AEAAA3;font-size:12px">Детали недоступны — расчёт сохранён в старой версии</div>')}
+        ${i.comment ? '<div style="margin-top:6px;padding-top:8px;border-top:1px solid #F2F0EB;color:#6B6762">'+i.comment+'</div>' : ''}
       </div>
     </div>
   `).join('');
