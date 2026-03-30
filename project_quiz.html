@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Классификатор проектов — Яндекс Образование</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0F0F0F;
+    --white: #FAFAF8;
+    --gray-1: #F2F0EB;
+    --gray-2: #E0DDD6;
+    --gray-3: #AEAAA3;
+    --gray-4: #6B6762;
+    --s-bg: #F0EEE8; --s-accent: #5C5852; --s-border: #CCC9C0;
+    --m-bg: #E8F0F8; --m-accent: #1A5FA8; --m-border: #9DC0E0;
+    --l-bg: #EDEBFC; --l-accent: #3D34B2; --l-border: #B0A8EE;
+    --xl-bg: #E8F5E8; --xl-accent: #2A6B2A; --xl-border: #9FCA9F;
+    --xxl-bg: #FDEEE8; --xxl-accent: #8B3010; --xxl-border: #F0A888;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Golos Text', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--gray-2);
+  }
+
+  .logo {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--black);
+    line-height: 1.2;
+  }
+
+  .logo span { color: var(--gray-4); font-weight: 400; display: block; font-size: 11px; margin-top: 1px; }
+
+  .logo-dot {
+    width: 32px; height: 32px;
+    background: var(--black);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-dot svg { width: 18px; height: 18px; fill: var(--white); }
+
+  main {
+    width: 100%;
+    max-width: 680px;
+    padding: 48px 24px 80px;
+    flex: 1;
+  }
+
+  .intro { margin-bottom: 40px; }
+
+  .intro-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--gray-3);
+    margin-bottom: 12px;
+  }
+
+  .intro h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .intro p {
+    font-size: 15px;
+    color: var(--gray-4);
+    line-height: 1.6;
+  }
+
+  .type-section { margin-bottom: 8px; }
+
+  .type-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--gray-3);
+    margin-bottom: 10px;
+  }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .type-btn {
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-2);
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Golos Text', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.3;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .type-btn:hover { border-color: var(--black); background: var(--gray-1); }
+
+  .type-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--gray-1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .quiz-area { display: none; }
+  .quiz-area.active { display: block; }
+  .type-select.hidden { display: none; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--gray-4);
+    cursor: pointer;
+    margin-bottom: 28px;
+    padding: 6px 0;
+    background: none;
+    border: none;
+    font-family: 'Golos Text', sans-serif;
+    transition: color .15s;
+  }
+  .back-link:hover { color: var(--black); }
+  .back-link svg { width: 14px; height: 14px; }
+
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--gray-4);
+    margin-bottom: 20px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--gray-2);
+    border-radius: 2px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--black);
+    border-radius: 2px;
+    transition: width .3s ease;
+  }
+
+  .question-num {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--gray-3);
+    margin-bottom: 10px;
+  }
+
+  .question-text {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(16px, 3vw, 20px);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+
+  .question-hint {
+    font-size: 14px;
+    color: var(--gray-4);
+    line-height: 1.6;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    background: var(--gray-1);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--gray-2);
+  }
+
+  .answer-btns {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .answer-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-2);
+    background: var(--white);
+    font-family: 'Golos Text', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+    color: var(--black);
+  }
+
+  .answer-btn.yes:hover { border-color: var(--black); background: var(--black); color: var(--white); }
+  .answer-btn.no:hover { border-color: var(--gray-3); background: var(--gray-1); }
+
+  .step-back {
+    font-size: 13px;
+    color: var(--gray-3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Golos Text', sans-serif;
+    padding: 4px 0;
+    transition: color .15s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .step-back:hover { color: var(--gray-4); }
+
+  .result-area { display: none; }
+  .result-area.active { display: block; }
+
+  .result-card {
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    border: 1.5px solid;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-size-label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 4px;
+    letter-spacing: -0.03em;
+  }
+
+  .result-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .result-desc {
+    font-size: 14px;
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .result-examples {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: .75;
+    margin-bottom: 18px;
+  }
+
+  .result-divider {
+    height: 1px;
+    background: currentColor;
+    opacity: .12;
+    margin-bottom: 16px;
+  }
+
+  .criteria-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .crit-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .crit-key { opacity: .6; font-weight: 500; }
+
+  .result-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-2);
+    background: var(--white);
+    font-family: 'Golos Text', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--black);
+    transition: all .15s;
+  }
+  .action-btn:hover { border-color: var(--black); background: var(--gray-1); }
+  .action-btn.primary { background: var(--black); color: var(--white); border-color: var(--black); }
+  .action-btn.primary:hover { background: #333; }
+
+  @media (max-width: 480px) {
+    header { padding: 16px 20px; }
+    main { padding: 32px 16px 60px; }
+    .type-grid { grid-template-columns: 1fr; }
+    .answer-btns { flex-direction: column; }
+    .result-size-label { font-size: 48px; }
+    .crit-row { grid-template-columns: 100px 1fr; }
+  }
+
+  .calc-area { display: none; }
+  .calc-section-label { font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#AEAAA3;margin-bottom:10px; }
+  .size-btns { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px; }
+  .size-btn { padding:10px 16px;border-radius:8px;border:1.5px solid #E0DDD6;background:#FAFAF8;font-family:'Golos Text',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:60px;transition:all .15s; }
+  .size-btn span { font-size:11px;font-weight:400;color:#AEAAA3; }
+  .size-btn.selected { border-color:#0F0F0F;background:#0F0F0F;color:#FAFAF8; }
+  .size-btn.selected span { color:#AEAAA3; }
+  .size-btn:not(.selected):hover { border-color:#0F0F0F;background:#F2F0EB; }
+  .launch-btns { display:flex;gap:8px;flex-wrap:wrap; }
+  .launch-btn { padding:8px 14px;border-radius:8px;border:1.5px solid #E0DDD6;background:#FAFAF8;font-family:'Golos Text',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;transition:all .15s; }
+  .launch-btn span { font-size:11px;color:#AEAAA3; }
+  .launch-btn.selected { border-color:#0F0F0F;background:#0F0F0F;color:#FAFAF8; }
+  .launch-btn.selected span { color:#AEAAA3; }
+  .launch-btn:not(.selected):hover { border-color:#0F0F0F;background:#F2F0EB; }
+  .param-list { display:flex;flex-direction:column;gap:0; }
+  .param-row { padding:12px 0;border-bottom:1px solid #F2F0EB;display:flex;flex-direction:column;gap:8px; }
+  .param-row:last-child { border-bottom:none; }
+  .param-label { font-size:14px;font-weight:500;color:#0F0F0F;line-height:1.3; }
+  .param-hint { font-size:12px;font-weight:400;color:#AEAAA3;margin-top:2px; }
+  .param-opts { display:flex;gap:6px;flex-wrap:wrap; }
+  .param-btn { padding:6px 12px;border-radius:6px;border:1.5px solid #E0DDD6;background:#FAFAF8;font-family:'Golos Text',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;transition:all .15s;white-space:nowrap; }
+  .param-btn span { font-size:11px;color:#AEAAA3; }
+  .param-btn.selected { border-color:#534AB7;background:#EEEDFE;color:#3C3489; }
+  .param-btn.selected span { color:#AFA9EC; }
+  .param-btn:not(.selected):hover { border-color:#888780;background:#F2F0EB; }
+  .calc-result { margin-top:28px;padding:20px 24px;border-radius:12px;background:#F2F0EB;display:flex;flex-direction:column;gap:8px; }
+  .calc-score { font-family:'Unbounded',sans-serif;font-size:52px;font-weight:600;letter-spacing:-0.03em;line-height:1;color:#0F0F0F; }
+  .calc-formula { font-size:13px;color:#6B6762;font-family:'Golos Text',sans-serif; }
+  .calc-grade { font-size:15px;font-weight:600;padding:6px 14px;border-radius:6px;display:inline-block;width:fit-content;margin-top:4px; }
+
+  .nav-tabs { display:flex; gap:0; border-bottom:1px solid #E0DDD6; margin-bottom:32px; }
+  .nav-tab { padding:10px 20px; font-family:'Golos Text',sans-serif; font-size:14px; font-weight:500; color:#6B6762; background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; transition:all .15s; margin-bottom:-1px; }
+  .nav-tab.active { color:#0F0F0F; border-bottom-color:#0F0F0F; }
+  .nav-tab:hover:not(.active) { color:#0F0F0F; }
+  .history-area { display:none; }
+  .history-area.active { display:block; }
+  .history-controls { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+  .history-search { flex:1; min-width:180px; padding:9px 14px; border-radius:8px; border:1.5px solid #E0DDD6; font-family:'Golos Text',sans-serif; font-size:14px; background:#FAFAF8; color:#0F0F0F; }
+  .history-search:focus { outline:none; border-color:#0F0F0F; }
+  .history-filter { padding:9px 14px; border-radius:8px; border:1.5px solid #E0DDD6; font-family:'Golos Text',sans-serif; font-size:14px; background:#FAFAF8; color:#0F0F0F; cursor:pointer; }
+  .history-empty { text-align:center; padding:48px 0; color:#AEAAA3; font-size:14px; }
+  .history-list { display:flex; flex-direction:column; gap:10px; }
+  .history-card { padding:14px 16px; border-radius:10px; border:1.5px solid #E0DDD6; background:#FAFAF8; cursor:pointer; transition:border-color .15s; }
+  .history-card:hover { border-color:#0F0F0F; }
+  .history-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .history-card-name { font-size:14px; font-weight:600; color:#0F0F0F; }
+  .history-card-date { font-size:12px; color:#AEAAA3; flex-shrink:0; }
+  .history-card-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .history-tag { font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px; }
+  .history-tag.size-S  { background:#F0EEE8; color:#5C5852; }
+  .history-tag.size-M  { background:#E4EEF8; color:#0D3F72; }
+  .history-tag.size-L  { background:#ECEAFA; color:#2E269A; }
+  .history-tag.size-XL { background:#E5F3E5; color:#1E5C1E; }
+  .history-tag.size-XXL{ background:#FCEAE4; color:#7A2A10; }
+  .history-tag.grade   { background:#F2F0EB; color:#5C5852; }
+  .history-tag.score   { background:#0F0F0F; color:#FAFAF8; }
+  .history-tag.intl    { background:#FEF3E2; color:#854F0B; }
+  .history-pm { font-size:12px; color:#6B6762; }
+  .save-btn { width:100%; margin-top:20px; padding:14px; border-radius:8px; border:none; background:#0F0F0F; color:#FAFAF8; font-family:'Golos Text',sans-serif; font-size:15px; font-weight:500; cursor:pointer; transition:background .15s; }
+  .save-btn:hover { background:#333; }
+  .save-form { margin-top:20px; padding:16px; background:#F2F0EB; border-radius:10px; }
+  .save-form label { font-size:13px; color:#6B6762; display:block; margin-bottom:6px; }
+  .save-form input { width:100%; padding:9px 12px; border-radius:7px; border:1.5px solid #E0DDD6; font-family:'Golos Text',sans-serif; font-size:14px; background:#FAFAF8; color:#0F0F0F; margin-bottom:10px; }
+  .save-form input:focus { outline:none; border-color:#0F0F0F; }
+  .save-form-row { display:flex; gap:8px; }
+  .save-confirm { flex:1; padding:10px; border-radius:7px; border:none; background:#0F0F0F; color:#FAFAF8; font-family:'Golos Text',sans-serif; font-size:14px; font-weight:500; cursor:pointer; }
+  .save-cancel { padding:10px 16px; border-radius:7px; border:1.5px solid #E0DDD6; background:#FAFAF8; color:#6B6762; font-family:'Golos Text',sans-serif; font-size:14px; cursor:pointer; }
+  .setup-banner { padding:14px 16px; background:#FEF3E2; border-radius:10px; border:1.5px solid #FAC775; font-size:13px; color:#633806; line-height:1.6; margin-bottom:20px; }
+  .setup-banner strong { display:block; margin-bottom:4px; }
+  .setup-banner code { background:#F9E0A8; padding:1px 5px; border-radius:3px; font-size:12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-dot">
+    <svg viewBox="0 0 18 18"><rect x="2" y="2" width="6" height="6" rx="1.5"/><rect x="10" y="2" width="6" height="6" rx="1.5"/><rect x="2" y="10" width="6" height="6" rx="1.5"/><rect x="10" y="10" width="6" height="6" rx="1.5"/></svg>
+  </div>
+  <div class="logo">Яндекс Образование <span>Классификатор проектов</span></div>
+</header>
+
+<main>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tabQuiz" onclick="switchTab('quiz')">Классификатор</button>
+    <button class="nav-tab" id="tabHistory" onclick="switchTab('history')">История расчётов</button>
+  </div>
+  <div class="intro">
+    <div class="intro-label">Инструмент PM-команды</div>
+    <h1>Определи размер проекта</h1>
+    <p>Ответь на несколько вопросов — и проект автоматически попадёт в категорию S, M, L, XL или XXL. Используется при оценке сложности на ревью грейдов.</p>
+  </div>
+
+  <div class="type-select" id="typeSelect">
+    <div class="type-section-label">Тип проекта</div>
+    <div class="type-grid">
+      <button class="type-btn" onclick="startQuiz('event')"><span class="type-icon">🎤</span>Мероприятие</button>
+      <button class="type-btn" onclick="startQuiz('program')"><span class="type-icon">📚</span>Образовательная программа</button>
+      <button class="type-btn" onclick="startQuiz('набор')"><span class="type-icon">🎯</span>Набор</button>
+      <button class="type-btn" onclick="startQuiz('camp')"><span class="type-icon">⛺</span>Кемп</button>
+      <button class="type-btn" onclick="startQuiz('digital')"><span class="type-icon">💻</span>Цифровой продукт</button>
+      <button class="type-btn" onclick="startQuiz('other')"><span class="type-icon">📁</span>Другой проект</button>
+    </div>
+  </div>
+
+  <div class="quiz-area" id="quizArea">
+    <button class="back-link" onclick="resetToTypes()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg>
+      Выбрать другой тип
+    </button>
+    <div class="type-badge" id="typeBadge"></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="question-num" id="qNum"></div>
+    <div class="question-text" id="qText"></div>
+    <div class="question-hint" id="qHint"></div>
+    <div class="answer-btns">
+      <button class="answer-btn yes" onclick="answer('yes')">Да</button>
+      <button class="answer-btn no" onclick="answer('no')">Нет</button>
+    </div>
+    <button class="step-back" id="stepBack" onclick="goBack()" style="display:none">
+      ← вернуться к предыдущему вопросу
+    </button>
+  </div>
+
+  <div class="result-area" id="resultArea">
+    <button class="back-link" onclick="resetToTypes()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg>
+      Начать заново
+    </button>
+    <div class="result-card" id="resultCard">
+      <div class="result-size-label" id="rSize"></div>
+      <div class="result-name" id="rName"></div>
+      <div class="result-desc" id="rDesc"></div>
+      <div class="result-examples" id="rExamples"></div>
+      <div class="result-divider"></div>
+      <div class="criteria-grid" id="rCriteria"></div>
+    </div>
+    <div class="result-actions">
+      <button class="action-btn primary" onclick="openCalc()">Посчитать сложность →</button>
+      <button class="action-btn" onclick="repeatSameType()">Ещё один проект</button>
+      <button class="action-btn" onclick="resetToTypes()">Другой тип</button>
+    </div>
+  </div>
+
+  <div class="calc-area" id="calcArea" style="display:none">
+    <button class="back-link" onclick="closeCalc()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg>
+      Назад к результату
+    </button>
+    <div class="intro-label" style="margin-bottom:8px">Методика оценки сложности</div>
+    <h2 style="font-family:'Unbounded',sans-serif;font-size:clamp(18px,3vw,24px);font-weight:600;letter-spacing:-0.02em;margin-bottom:6px;line-height:1.25">Подсчёт баллов</h2>
+    <p style="font-size:14px;color:#6B6762;margin-bottom:28px;line-height:1.6">Формула: <strong>(Базовый размер + Параметры) × Коэффициент новизны</strong></p>
+
+    <div class="calc-section-label">Блок 1 — Базовый размер (выбран из квиза)</div>
+    <div class="size-btns" id="sizeBtns">
+      <button class="size-btn" data-pts="10" onclick="selectSize(this,10,'S')">S<span>10 б</span></button>
+      <button class="size-btn" data-pts="20" onclick="selectSize(this,20,'M')">M<span>20 б</span></button>
+      <button class="size-btn" data-pts="35" onclick="selectSize(this,35,'L')">L<span>35 б</span></button>
+      <button class="size-btn" data-pts="50" onclick="selectSize(this,50,'XL')">XL<span>50 б</span></button>
+      <button class="size-btn" data-pts="70" onclick="selectSize(this,70,'XXL')">XXL<span>70 б</span></button>
+    </div>
+
+    <div class="calc-section-label" style="margin-top:24px">Блок 2 — Коэффициент новизны</div>
+    <div class="launch-btns" id="launchBtns">
+      <button class="launch-btn selected" data-k="1.5" onclick="selectLaunch(this)">Впервые<span>×1.5</span></button>
+      <button class="launch-btn" data-k="1.2" onclick="selectLaunch(this)">2-й запуск<span>×1.2</span></button>
+      <button class="launch-btn" data-k="1.0" onclick="selectLaunch(this)">3–4-й<span>×1.0</span></button>
+      <button class="launch-btn" data-k="0.85" onclick="selectLaunch(this)">5–7-й<span>×0.85</span></button>
+      <button class="launch-btn" data-k="0.7" onclick="selectLaunch(this)">8+<span>×0.7</span></button>
+    </div>
+
+    <div class="calc-section-label" style="margin-top:24px">Блок 3 — Параметры сложности</div>
+    <div class="param-list">
+      <div class="param-row"><div class="param-label">Стейкхолдеры<div class="param-hint">стейкхолдер — внутренний (Яндекс), заказчик — внешний</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'st')">1–2<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'st')">3–5<span>+3</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'st')">6–10<span>+6</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'st')">10+<span>+8</span></button></div></div>
+      <div class="param-row"><div class="param-label">Неопределённость<div class="param-hint">есть ли чёткое ТЗ и прецеденты</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'un')">Шаблон<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'un')">Частичная<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'un')">Высокая<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'un')">Критичная<span>+10</span></button></div></div>
+      <div class="param-row"><div class="param-label">Дедлайн</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'dl')">Гибкий<span>0 б</span></button><button class="param-btn" data-val="2" onclick="selectParam(this,'dl')">Умеренный<span>+2</span></button><button class="param-btn" data-val="5" onclick="selectParam(this,'dl')">Жёсткий<span>+5</span></button></div></div>
+      <div class="param-row"><div class="param-label">Охват аудитории</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'aud')">до 100<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'aud')">100–1к<span>+3</span></button><button class="param-btn" data-val="5" onclick="selectParam(this,'aud')">1к–10к<span>+5</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'aud')">10к+<span>+8</span></button></div></div>
+      <div class="param-row"><div class="param-label">Стратегическая значимость</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'str')">Операционная<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'str')">Стрим<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'str')">Компания<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'str')">Флагман<span>+10</span></button></div></div>
+      <div class="param-row"><div class="param-label">Команда в подчинении</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'team')">Нет<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'team')">1–2<span>+3</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'team')">3–5<span>+6</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'team')">6+<span>+8</span></button></div></div>
+      <div class="param-row"><div class="param-label">Целеполагание<div class="param-hint">кто ставит цели проекта</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'goal')">Заданы сверху<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'goal')">Участвует<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'goal')">Сам ставит<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'goal')">Цели стрима<span>+10</span></button></div></div>
+      <div class="param-row"><div class="param-label">Международный контекст<div class="param-hint">иностранные партнёры или реализация за рубежом</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'intl')">Нет<span>0 б</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'intl')">Да, впервые<span>+6</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'intl')">Да, повторно<span>+3</span></button></div></div>
+    </div>
+
+    <div class="calc-result" id="calcResult">
+      <div class="calc-score" id="calcScore">—</div>
+      <div class="calc-formula" id="calcFormula"></div>
+      <div class="calc-grade" id="calcGrade"></div>
+    </div>
+
+    <div id="saveForm" class="save-form" style="display:none">
+      <label>Имя PM</label>
+      <input id="savePm" placeholder="Иван Иванов" />
+      <label>Название проекта</label>
+      <input id="saveProject" placeholder="Набор в ШБА 2025" />
+      <label>Комментарий <span style="font-weight:400;color:#AEAAA3">(необязательно)</span></label>
+      <input id="saveComment" placeholder="Например: первый запуск, сложный стейкхолдер, пересмотреть в следующем периоде..." />
+      <div class="save-form-row">
+        <button class="save-confirm" onclick="confirmSave()">Сохранить</button>
+        <button class="save-cancel" onclick="document.getElementById('saveForm').style.display='none'">Отмена</button>
+      </div>
+    </div>
+    <button class="save-btn" onclick="showSaveForm()">Сохранить расчёт в историю</button>
+  </div>
+
+  <div class="history-area" id="historyArea">
+    <div id="setupBanner" class="setup-banner" style="display:none">
+      <strong>Настройка сохранения (один раз)</strong>
+      Чтобы история сохранялась для всей команды, нужно подключить Google Sheets.<br>
+      Инструкция: открой файл <code>SETUP.md</code> из архива — там 5 шагов.
+      Пока не настроено, история хранится только в этом браузере.
+    </div>
+    <div class="history-controls">
+      <input class="history-search" id="histSearch" placeholder="Поиск по названию проекта или PM..." oninput="renderHistory()">
+      <select class="history-filter" id="histFilterSize" onchange="renderHistory()">
+        <option value="">Все размеры</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="XXL">XXL</option>
+      </select>
+      <select class="history-filter" id="histFilterGrade" onchange="renderHistory()">
+        <option value="">Все грейды</option>
+        <option value="Грейд 14">Грейд 14</option>
+        <option value="Грейд 15">Грейд 15</option>
+        <option value="Грейд 16">Грейд 16</option>
+        <option value="Грейд 17">Грейд 17</option>
+      </select>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+</main>
+
+<script>
+const SIZES = {
+  S:  { bg:'#F0EEE8', tc:'#3A3830', bc:'#CCC9C0', name:'S — точечный проект' },
+  M:  { bg:'#E4EEF8', tc:'#0D3F72', bc:'#8CBADE', name:'M — проект среднего масштаба' },
+  L:  { bg:'#ECEAFA', tc:'#2E269A', bc:'#A8A2E8', name:'L — большой проект' },
+  XL: { bg:'#E5F3E5', tc:'#1E5C1E', bc:'#90C490', name:'XL — крупный стратегический' },
+  XXL:{ bg:'#FCEAE4', tc:'#7A2A10', bc:'#EEA080', name:'XXL — флагманская инициатива' },
+};
+
+const TYPE_ICONS = { event:'🎤', program:'📚', набор:'🎯', camp:'⛺', digital:'💻', other:'📁' };
+const TYPE_NAMES = { event:'Мероприятие', program:'Образовательная программа', набор:'Набор', camp:'Кемп', digital:'Цифровой продукт', other:'Другой проект' };
+
+const QUESTIONS = {
+  event: [
+    { id:'e1', text:'Аудитория — новая внешняя или ЛПР?', hint:'Новая аудитория — не студенты и школьники, которых уже учим, и не сотрудники ЯО. ЛПР — партнёры вузов, топы индустрии, чиновники, GR.', yes:'e2', no:'e5' },
+    { id:'e2', text:'Масштаб максимальный: все каналы промо или проект от лица Яндекса?', hint:'YaC/e, КМУ, федеральная кампания с бигтехами — это сюда. Если промо только через несколько каналов — нет.', yes:'e3', no:'e4' },
+    { id:'e3', text:'Проект внедряет принципиально новый формат образования или делает дизрапт на рынке?', hint:'Не просто большой масштаб, а что-то чего не было: новая модель, ставка компании, изменение рынка образования.', yes:'R:XXL', no:'R:XL' },
+    { id:'e4', text:'Два и более крупных внешних партнёра или участие бигтехов / GR-структур?', hint:'Один вуз — ещё L. Два+, или бигтех, или GR — XL.', yes:'R:XL', no:'R:L' },
+    { id:'e5', text:'Аудитория — преподаватели, менторы или новая в одно касание через партнёрский вуз?', hint:'Одно касание — познакомили, но не ведём дальше в нашу программу.', yes:'e6', no:'R:S' },
+    { id:'e6', text:'Есть внешнее промо за пределами внутренних чатов и рассылок по базе?', hint:'Плакаты, посты в SM ЯО, PR-материалы, внешний сайт — это внешнее промо.', yes:'R:M', no:'R:S' },
+  ],
+  program: [
+    { id:'p1', text:'Программа запускается впервые?', hint:'Повторный запуск с готовым контентом и без внешних партнёров — сразу ниже по размеру.', yes:'p2', no:'p4' },
+    { id:'p2', text:'Есть внешние партнёры или контент разрабатывается с нуля с привлечением внешних экспертов?', hint:'Только внутренняя команда без партнёров — M. Внешние эксперты или вуз-партнёр — L и выше.', yes:'p3', no:'R:M' },
+    { id:'p3', text:'Федеральный масштаб или несколько крупных партнёров одновременно?', hint:'Один партнёр, один поток — L. Несколько регионов или партнёров — XL.', yes:'p_xxl_check', no:'R:L' },
+    { id:'p_xxl_check', text:'Программа внедряет принципиально новый формат образования или дизраптивна для рынка?', hint:'Ставка компании, новая модель которой не было — XXL. Масштабный запуск в рамках известного формата — XL.', yes:'R:XXL', no:'R:XL' },
+    { id:'p4', text:'Повторный запуск с существенными изменениями: новый формат, аудитория или партнёры?', hint:'Только обновление контента — S/M. Новая аудитория или структура — M/L.', yes:'p5', no:'R:S' },
+    { id:'p5', text:'Изменения затрагивают партнёрства или выход в новую аудиторию?', hint:'', yes:'R:L', no:'R:M' },
+  ],
+  набор: [
+    { id:'n1', text:'Набор федеральный — несколько городов или онлайн на всю страну?', hint:'Один город или один вуз — ниже. Федеральный охват — выше.', yes:'n2', no:'n3' },
+    { id:'n2', text:'Есть внешние партнёры в промо или отборе — вузы, компании, GR?', hint:'Партнёрский набор с несколькими вузами или госструктурами — XL.', yes:'R:XL', no:'R:L' },
+    { id:'n3', text:'Масштабная промо-кампания: внешние каналы, PR, digital?', hint:'Только рассылки и посты в чатах — S. Внешняя кампания — M.', yes:'R:M', no:'R:S' },
+  ],
+  camp: [
+    { id:'c1', text:'Кемп для новой внешней аудитории с внешними партнёрами или публичным промо?', hint:'Внутренний кемп для текущих студентов — M. Внешний с партнёрами — L и выше.', yes:'c2', no:'R:M' },
+    { id:'c2', text:'Масштаб большой: несколько треков, сотни участников, несколько партнёров или федеральный охват?', hint:'Один поток, один партнёр — L. Масштабный кемп — XL.', yes:'R:XL', no:'R:L' },
+  ],
+  digital: [
+    { id:'d1', text:'Продукт внедряется в нескольких вузах или охватывает тысячи студентов?', hint:'Один вуз, пилот — M. Несколько вузов или большой охват — L и выше.', yes:'d2', no:'R:M' },
+    { id:'d2', text:'Федеральное внедрение или интеграция с государственными образовательными платформами?', hint:'Партнёрство с Минобром, ФГОС, платформы масштаба страны — XL.', yes:'d3', no:'R:L' },
+    { id:'d3', text:'Продукт создаёт принципиально новую модель взаимодействия с образованием?', hint:'Дизраптивный продукт, ставка компании — XXL. Масштабное внедрение известного формата — XL.', yes:'R:XXL', no:'R:XL' },
+  ],
+  other: [
+    { id:'o1', text:'Проект направлен на новую внешнюю аудиторию или ЛПР?', hint:'', yes:'o2', no:'o4' },
+    { id:'o2', text:'Федеральный масштаб, несколько крупных партнёров или максимальное промо?', hint:'', yes:'o3', no:'R:L' },
+    { id:'o3', text:'Проект внедряет новый формат образования или дизраптивен для рынка?', hint:'Ставка компании, изменение рынка — XXL. Крупный стратегический запуск — XL.', yes:'R:XXL', no:'R:XL' },
+    { id:'o4', text:'Есть внешнее промо или внешние партнёры?', hint:'', yes:'R:M', no:'R:S' },
+  ],
+};
+
+const RESULTS = {
+  event: {
+    S:{ desc:'Небольшое внутреннее мероприятие с понятной аудиторией и переиспользованным контентом. Низкая неопределённость — шаблоны и процессы уже есть.', examples:'Вебинар, воркшоп, онбординг потока, онлайн-выпускной, стратсессия команды, лекция для студентов.', criteria:{'ЦА':'Текущая (студенты, школьники) или внутренняя (сотрудники ЯО)','Промо':'Внутреннее — чаты, рассылки по базе','Контент':'Переиспользованный или внутренний','Партнёры':'Нет внешних'} },
+    M:{ desc:'Мероприятие с ограниченным внешним промо, возможна новая аудитория в одно касание через партнёрский вуз.', examples:'Мероприятие в вузе, ДОД в программе, мероприятие для преподавателей, событие для менторов.', criteria:{'ЦА':'Преподаватели, менторы или новая аудитория в одно касание','Промо':'Внешнее, ограниченное (плакаты, SM ЯО)','Партнёры':'Возможен один партнёр'} },
+    L:{ desc:'Мероприятие с PR и digital-поддержкой, новой или широкой аудиторией, контентом с нуля и спикерами уровня ЯО/Яндекса.', examples:'Церемония награждения, пресс-конференция, офлайн-выпускной, Ночь студента, Клуб друзей.', criteria:{'ЦА':'Новая внешняя, ЛПР, партнёры, GR','Промо':'Внешнее с PR и digital','Контент':'С нуля, эксперты ЯО и Яндекса','Спикеры':'Уровень стейкхолдеров ЯО'} },
+    XL:{ desc:'Масштабное мероприятие с максимальным промо, несколькими ЦА, спикерами уровня Тиграна+ или от лица Яндекса.', examples:'КМУ, YaC/e, масштабный партнёрский запуск с бигтехами.', criteria:{'ЦА':'Широкая новая + 2+ ЦА ЯО + ЛПР/GR','Промо':'Максимальное через все каналы','Партнёры':'Несколько крупных, бигтехи, GR или проект от лица Яндекса'} },
+    XXL:{ desc:'Флагманская инициатива, которая внедряет новый формат образования или делает дизрапт на рынке. Ставка компании.', examples:'Запуск нового стрима, дизраптивный образовательный формат, стратегическая инициатива уровня компании.', criteria:{'Суть':'Новый формат образования или дизрапт рынка','Ставка':'Стратегическая ставка компании','Управление':'Команда PM, портфельный подход','Горизонт':'1–3 года'} },
+  },
+  program: {
+    S:{ desc:'Повторный запуск программы без изменений. Процессы отработаны, контент готов, команда знает что делать.', examples:'Очередной поток существующей программы без изменений структуры или аудитории.', criteria:{'Новизна':'Повторный, всё знакомо','Контент':'Переиспользован','Партнёры':'Только внутренняя команда','Аудитория':'Та же, что раньше'} },
+    M:{ desc:'Первый запуск без партнёров, или повторный с умеренными изменениями. Контент может разрабатываться внутри.', examples:'Новый поток с обновлённым контентом, программа для той же аудитории с новым форматом занятий.', criteria:{'Новизна':'Первый запуск без партнёров или обновление','Контент':'Разрабатывается внутри команды','Партнёры':'Нет внешних'} },
+    L:{ desc:'Новая программа с внешними партнёрами или контентом с нуля от внешних экспертов.', examples:'Новая образовательная программа, партнёрский курс с вузом, программа для новой аудитории.', criteria:{'Новизна':'Первый запуск с партнёрами','Контент':'С нуля, внешние эксперты','Партнёры':'Вуз или внешняя институция'} },
+    XL:{ desc:'Федеральная программа или запуск с несколькими крупными партнёрами одновременно.', examples:'Федеральная образовательная инициатива, программа с несколькими вузами или регионами.', criteria:{'Масштаб':'Несколько регионов или партнёров','Партнёры':'Несколько крупных или GR','Аудитория':'Широкая новая'} },
+    XXL:{ desc:'Программа, которая внедряет принципиально новую модель образования или меняет рынок. Ставка компании.', examples:'Дизраптивная образовательная программа, новая модель обучения которой не было на рынке.', criteria:{'Суть':'Новая модель образования или дизрапт','Ставка':'Стратегическая ставка компании','Горизонт':'1–3 года'} },
+  },
+  набор: {
+    S:{ desc:'Небольшой локальный набор через внутренние каналы по текущей базе.', examples:'Набор через рассылки и чаты, один город, ограниченное количество мест.', criteria:{'Промо':'Только внутренние каналы','Масштаб':'Один город, текущая база'} },
+    M:{ desc:'Локальный набор с внешней промо-кампанией через несколько каналов.', examples:'Набор с внешними постами, плакатами, digital-кампанией в одном городе или вузе.', criteria:{'Промо':'Внешние каналы (SM, плакаты, digital)','Масштаб':'Один город или один вуз'} },
+    L:{ desc:'Федеральный набор или набор через партнёрские вузы с внешним промо.', examples:'Федеральный набор в школу, набор через партнёрские вузы нескольких городов.', criteria:{'Масштаб':'Несколько городов или онлайн по стране','Промо':'PR, digital, партнёрские каналы'} },
+    XL:{ desc:'Масштабный набор с участием нескольких крупных партнёров или GR-структур.', examples:'Федеральный набор с Минобром, партнёрский набор с несколькими вузами и бигтехами.', criteria:{'Партнёры':'Несколько крупных, GR или госструктуры','Масштаб':'Федеральный охват'} },
+  },
+  camp: {
+    M:{ desc:'Внутренний кемп для текущих студентов или школьников без внешних партнёров.', examples:'Кемп для действующих студентов программы, внутренний интенсив.', criteria:{'Аудитория':'Текущие студенты или школьники','Промо':'Внутреннее','Партнёры':'Нет внешних'} },
+    L:{ desc:'Кемп с внешними партнёрами или для новой аудитории с внешним промо.', examples:'Партнёрский кемп с вузом, открытый образовательный интенсив.', criteria:{'Аудитория':'Новая или внешняя','Партнёры':'Один внешний партнёр','Промо':'Внешнее'} },
+    XL:{ desc:'Масштабный кемп с несколькими треками, сотнями участников и несколькими крупными партнёрами.', examples:'Федеральный студенческий кемп, многопоточный интенсив с бигтехами.', criteria:{'Масштаб':'Сотни участников, несколько треков','Партнёры':'Несколько крупных или федеральный охват'} },
+  },
+  digital: {
+    M:{ desc:'Цифровой продукт для одного вуза или пилотное внедрение с ограниченным охватом.', examples:'LMS для одного вуза, инструмент для преподавателей одного потока, пилот онлайн-курса.', criteria:{'Охват':'Один вуз или пилот','Интеграция':'Ограниченная'} },
+    L:{ desc:'Продукт для нескольких вузов или с охватом тысяч студентов.', examples:'Платформа для нескольких вузов, онлайн-курсы на тысячи студентов, инструмент для преподавателей нескольких вузов.', criteria:{'Охват':'Несколько вузов или тысячи студентов','Интеграция':'Глубокая в учебный процесс'} },
+    XL:{ desc:'Федеральное внедрение или интеграция с государственными образовательными платформами.', examples:'Интеграция с Минобром, ФГОС, платформа масштаба страны.', criteria:{'Охват':'Федеральный','Партнёры':'Госструктуры, Минобр'} },
+    XXL:{ desc:'Продукт, который создаёт принципиально новую модель взаимодействия с образованием. Дизраптивный. Ставка компании.', examples:'Новая образовательная платформа меняющая модель обучения на рынке.', criteria:{'Суть':'Новая модель или дизрапт рынка','Ставка':'Стратегическая ставка компании','Горизонт':'Долгосрочный'} },
+  },
+  other: {
+    S:{ desc:'Небольшой внутренний проект без внешних партнёров и промо.', examples:'', criteria:{'Аудитория':'Внутренняя или текущая','Промо':'Внутреннее'} },
+    M:{ desc:'Проект с внешним промо или одним партнёром для текущей или смежной аудитории.', examples:'', criteria:{'Промо':'Внешнее (ограниченное)','Партнёры':'Один или нет'} },
+    L:{ desc:'Проект для новой внешней аудитории с внешними партнёрами, без федерального масштаба.', examples:'', criteria:{'Аудитория':'Новая внешняя или ЛПР','Масштаб':'Локальный или региональный'} },
+    XL:{ desc:'Федеральный масштаб, несколько партнёров, максимальное промо.', examples:'', criteria:{'Масштаб':'Федеральный','Партнёры':'Несколько крупных'} },
+    XXL:{ desc:'Стратегическая инициатива, внедряющая новый формат или меняющая рынок образования. Ставка компании.', examples:'', criteria:{'Суть':'Новый формат или дизрапт','Ставка':'Стратегическая ставка компании'} },
+  },
+};
+
+let calcSizePts = 0;
+let calcLaunchK = 1.5;
+let calcParams = {st:0,un:0,dl:0,aud:0,str:0,team:0,goal:0,intl:0};
+
+function openCalc() {
+  document.getElementById('resultArea').style.display = 'none';
+  const ca = document.getElementById('calcArea');
+  ca.style.display = 'block';
+  if (pendingResult) {
+    const sizeMap = {S:10,M:20,L:35,XL:50,XXL:70};
+    const pts = sizeMap[pendingResult] || 35;
+    calcSizePts = pts;
+    document.querySelectorAll('.size-btn').forEach(b => {
+      const active = parseInt(b.dataset.pts) === pts;
+      b.classList.toggle('selected', active);
+    });
+  }
+  updateCalc();
+}
+
+function closeCalc() {
+  document.getElementById('calcArea').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'block';
+}
+
+function selectSize(btn, pts, label) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  calcSizePts = pts;
+  updateCalc();
+}
+
+function selectLaunch(btn) {
+  document.querySelectorAll('.launch-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  calcLaunchK = parseFloat(btn.dataset.k);
+  updateCalc();
+}
+
+function selectParam(btn, key) {
+  btn.closest('.param-opts').querySelectorAll('.param-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  calcParams[key] = parseInt(btn.dataset.val);
+  updateCalc();
+}
+
+function updateCalc() {
+  const sum = Object.values(calcParams).reduce((a,b) => a+b, 0);
+  const total = Math.round((calcSizePts + sum) * calcLaunchK);
+  document.getElementById('calcScore').textContent = total;
+  document.getElementById('calcFormula').textContent =
+    '(' + calcSizePts + ' + ' + sum + ') × ' + calcLaunchK + ' = ' + total;
+  let grade, gbg, gtc;
+  if (total < 26) { grade='Грейд 14'; gbg='#F0EEE8'; gtc='#5C5852'; }
+  else if (total < 56) { grade='Грейд 15'; gbg='#E4EEF8'; gtc='#0D3F72'; }
+  else if (total < 91) { grade='Грейд 16'; gbg='#ECEAFA'; gtc='#2E269A'; }
+  else { grade='Грейд 17'; gbg='#E5F3E5'; gtc='#1E5C1E'; }
+  const el = document.getElementById('calcGrade');
+  el.textContent = grade;
+  el.style.background = gbg;
+  el.style.color = gtc;
+}
+
+// ── GOOGLE SHEETS CONFIG ──────────────────────────────────────
+// Вставь сюда URL своего Apps Script после настройки (см. SETUP.md)
+const SHEETS_URL = 'https://script.google.com/a/macros/yandex-team.ru/s/AKfycbzNFTSods-u8qh2drK56rWdPhhZfIbJ-tbh42Kn4tKRjw8LvvkvTU90l3z8oAqTQscROA/exec';
+// ─────────────────────────────────────────────────────────────
+
+const HISTORY_KEY = 'yo_project_history';
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+}
+
+function saveToHistory(entry) {
+  const h = getHistory();
+  h.unshift({ ...entry, id: Date.now(), date: new Date().toLocaleDateString('ru-RU') });
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 200)));
+  if (SHEETS_URL) {
+    fetch(SHEETS_URL, { method:'POST', body: JSON.stringify(entry) }).catch(() => {});
+  }
+}
+
+function switchTab(tab) {
+  const isHistory = tab === 'history';
+  document.getElementById('tabQuiz').classList.toggle('active', !isHistory);
+  document.getElementById('tabHistory').classList.toggle('active', isHistory);
+  const sections = ['quizArea','resultArea','calcArea'];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isHistory ? 'none' : '';
+  });
+  const ts = document.getElementById('typeSelect');
+  if (ts) {
+    if (isHistory) ts.style.display = 'none';
+    else ts.style.display = ts.classList.contains('hidden') ? 'none' : '';
+  }
+  document.getElementById('historyArea').classList.toggle('active', isHistory);
+  if (isHistory) renderHistory();
+}
+
+function renderHistory() {
+  const search = document.getElementById('histSearch').value.toLowerCase();
+  const filterSize = document.getElementById('histFilterSize').value;
+  const filterGrade = document.getElementById('histFilterGrade').value;
+  let items = getHistory();
+  if (search) items = items.filter(i =>
+    (i.project||'').toLowerCase().includes(search) ||
+    (i.pm||'').toLowerCase().includes(search)
+  );
+  if (filterSize) items = items.filter(i => i.size === filterSize);
+  if (filterGrade) items = items.filter(i => i.grade === filterGrade);
+  const list = document.getElementById('historyList');
+  if (!items.length) {
+    list.innerHTML = '<div class="history-empty">Расчётов пока нет.<br>Заполни квиз и калькулятор — нажми «Сохранить».</div>';
+    return;
+  }
+  list.innerHTML = items.map(i => `
+    <div class="history-card">
+      <div class="history-card-top">
+        <div class="history-card-name">${i.project || 'Без названия'}</div>
+        <div class="history-card-date">${i.date || ''}</div>
+      </div>
+      <div class="history-card-meta">
+        <span class="history-tag size-${i.size}">${i.size}</span>
+        <span class="history-tag score">${i.score} б</span>
+        <span class="history-tag grade">${i.grade}</span>
+        ${i.intl ? '<span class="history-tag intl">🌐 Международный</span>' : ''}
+        ${i.pm ? '<span class="history-pm">PM: '+i.pm+'</span>' : ''}
+      </div>
+      ${i.comment ? '<div style="margin-top:6px;font-size:13px;color:#6B6762;line-height:1.5;padding-top:6px;border-top:1px solid #F2F0EB">'+i.comment+'</div>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function showSaveForm() {
+  const sf = document.getElementById('saveForm');
+  sf.style.display = sf.style.display === 'none' ? 'block' : 'none';
+}
+
+function confirmSave() {
+  const pm = document.getElementById('savePm').value.trim();
+  const project = document.getElementById('saveProject').value.trim();
+  if (!project) { document.getElementById('saveProject').focus(); return; }
+  const score = parseInt(document.getElementById('calcScore').textContent) || 0;
+  const grade = document.getElementById('calcGrade').textContent;
+  const sizeBtn = document.querySelector('.size-btn.selected');
+  const size = sizeBtn ? sizeBtn.textContent.replace(/\d+.*/, '').trim() : '?';
+  const intl = calcParams.intl > 0;
+  const comment = document.getElementById('saveComment').value.trim();
+  saveToHistory({ pm, project, score, grade, size, intl, comment });
+  document.getElementById('saveForm').style.display = 'none';
+  document.getElementById('savePm').value = '';
+  document.getElementById('saveProject').value = '';
+  document.getElementById('saveComment').value = '';
+  const btn = document.querySelector('.save-btn');
+  const orig = btn.textContent;
+  btn.textContent = 'Сохранено ✓';
+  btn.style.background = '#2A6B2A';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
+}
+
+let currentType = null;
+let qHistory = [];
+let currentQId = null;
+let pendingResult = null;
+let isIntlQuestion = false;
+
+const INTL_Q = {
+  id: '__intl__',
+  text: 'Проект реализуется в другой стране или с иностранными партнёрами?',
+  hint: 'Международный контекст добавляет баллы к счёту сложности при оценке на ревью — из-за языкового барьера, разницы в законодательстве, часовых поясах и культурных особенностях работы с партнёрами.',
+};
+
+function getQ(type, id) {
+  return QUESTIONS[type].find(q => q.id === id) || QUESTIONS[type][0];
+}
+
+function startQuiz(type) {
+  currentType = type;
+  qHistory = [];
+  currentQId = QUESTIONS[type][0].id;
+  pendingResult = null;
+  isIntlQuestion = false;
+  document.getElementById('typeSelect').classList.add('hidden');
+  document.getElementById('quizArea').classList.add('active');
+  document.getElementById('resultArea').classList.remove('active');
+  document.getElementById('typeBadge').textContent = TYPE_ICONS[type] + ' ' + TYPE_NAMES[type];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = isIntlQuestion ? INTL_Q : getQ(currentType, currentQId);
+  const total = Math.min(4, QUESTIONS[currentType].length) + 1;
+  const progress = Math.round((qHistory.length / total) * 100);
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('qNum').textContent = 'Вопрос ' + (qHistory.length + 1);
+  document.getElementById('qText').textContent = q.text;
+  const hint = document.getElementById('qHint');
+  if (q.hint) { hint.textContent = q.hint; hint.style.display = 'block'; }
+  else { hint.style.display = 'none'; }
+  document.getElementById('stepBack').style.display = qHistory.length > 0 ? 'flex' : 'none';
+}
+
+function answer(yn) {
+  if (isIntlQuestion) {
+    isIntlQuestion = false;
+    showResult(pendingResult, yn === 'yes');
+    return;
+  }
+  const q = getQ(currentType, currentQId);
+  const next = q[yn];
+  qHistory.push(currentQId);
+  if (next.startsWith('R:')) {
+    pendingResult = next.slice(2);
+    isIntlQuestion = true;
+    renderQuestion();
+  } else {
+    currentQId = next;
+    renderQuestion();
+  }
+}
+
+function goBack() {
+  if (!qHistory.length) return;
+  if (isIntlQuestion) {
+    isIntlQuestion = false;
+    pendingResult = null;
+    renderQuestion();
+    return;
+  }
+  currentQId = qHistory.pop();
+  renderQuestion();
+}
+
+function showResult(size, isInternational) {
+  document.getElementById('quizArea').classList.remove('active');
+  const ra = document.getElementById('resultArea');
+  ra.classList.add('active');
+  const s = SIZES[size];
+  const typeRes = RESULTS[currentType];
+  const r = typeRes[size] || typeRes[Object.keys(typeRes)[0]];
+  const card = document.getElementById('resultCard');
+  card.style.background = s.bg;
+  card.style.borderColor = s.bc;
+  card.style.color = s.tc;
+  document.getElementById('rSize').textContent = size;
+  document.getElementById('rName').textContent = s.name;
+  document.getElementById('rDesc').textContent = r.desc;
+  const ex = document.getElementById('rExamples');
+  if (r.examples) { ex.textContent = 'Примеры: ' + r.examples; ex.style.display = 'block'; }
+  else { ex.style.display = 'none'; }
+
+  let criteriaHTML = Object.entries(r.criteria)
+    .map(([k,v]) => `<div class="crit-row"><span class="crit-key">${k}</span><span>${v}</span></div>`).join('');
+
+  if (isInternational) {
+    criteriaHTML += `
+      <div style="margin-top:14px;padding:10px 14px;border-radius:8px;background:rgba(0,0,0,0.06);font-size:13px;line-height:1.55;display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:16px;flex-shrink:0">🌐</span>
+        <div>
+          <strong>Международный контекст</strong><br>
+          При подсчёте сложности добавь баллы за международность: языковой барьер, разница в законодательстве, часовые пояса, особенности работы с иностранными партнёрами повышают нагрузку на PM. Если проект повторный — учти это через коэффициент новизны.
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('rCriteria').innerHTML = criteriaHTML;
+}
+
+function resetToTypes() {
+  currentType = null; qHistory = []; currentQId = null; pendingResult = null; isIntlQuestion = false;
+  document.getElementById('typeSelect').classList.remove('hidden');
+  document.getElementById('quizArea').classList.remove('active');
+  document.getElementById('resultArea').classList.remove('active');
+}
+
+function repeatSameType() {
+  if (currentType) startQuiz(currentType);
+}
+</script>
+</body>
+</html>
