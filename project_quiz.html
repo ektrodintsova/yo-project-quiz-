@@ -458,7 +458,7 @@
       <button class="type-btn" onclick="startQuiz('event')"><span class="type-icon">🎤</span>Мероприятие</button>
       <button class="type-btn" onclick="startQuiz('program')"><span class="type-icon">📚</span>Образовательная программа</button>
       <button class="type-btn" onclick="startQuiz('набор')"><span class="type-icon">🎯</span>Набор</button>
-      <button class="type-btn" onclick="startQuiz('camp')"><span class="type-icon">⛺</span>Кемп</button>
+      <button class="type-btn" onclick="startQuiz('camp')"><span class="type-icon">⛺</span>Кемп и интенсив</button>
       <button class="type-btn" onclick="startQuiz('digital')"><span class="type-icon">💻</span>Цифровой продукт</button>
       <button class="type-btn" onclick="startQuiz('other')"><span class="type-icon">📁</span>Другой проект</button>
     </div>
@@ -532,14 +532,15 @@
 
     <div class="calc-section-label" style="margin-top:24px">Блок 3 — Параметры сложности</div>
     <div class="param-list">
-      <div class="param-row"><div class="param-label">Стейкхолдеры<div class="param-hint">стейкхолдер — внутренний (Яндекс), заказчик — внешний</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'st')">1–2<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'st')">3–5<span>+3</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'st')">6–10<span>+6</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'st')">10+<span>+8</span></button></div></div>
-      <div class="param-row"><div class="param-label">Неопределённость<div class="param-hint">есть ли чёткое ТЗ и прецеденты</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'un')">Шаблон<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'un')">Частичная<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'un')">Высокая<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'un')">Критичная<span>+10</span></button></div></div>
-      <div class="param-row"><div class="param-label">Дедлайн</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'dl')">Гибкий<span>0 б</span></button><button class="param-btn" data-val="2" onclick="selectParam(this,'dl')">Умеренный<span>+2</span></button><button class="param-btn" data-val="5" onclick="selectParam(this,'dl')">Жёсткий<span>+5</span></button></div></div>
-      <div class="param-row"><div class="param-label">Охват аудитории</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'aud')">до 100<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'aud')">100–1к<span>+3</span></button><button class="param-btn" data-val="5" onclick="selectParam(this,'aud')">1к–10к<span>+5</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'aud')">10к+<span>+8</span></button></div></div>
-      <div class="param-row"><div class="param-label">Стратегическая значимость</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'str')">Операционная<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'str')">Стрим<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'str')">Компания<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'str')">Флагман<span>+10</span></button></div></div>
-      <div class="param-row"><div class="param-label">Команда в подчинении</div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'team')">Нет<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'team')">1–2<span>+3</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'team')">3–5<span>+6</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'team')">6+<span>+8</span></button></div></div>
-      <div class="param-row"><div class="param-label">Целеполагание<div class="param-hint">кто ставит цели проекта</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'goal')">Заданы сверху<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'goal')">Участвует<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'goal')">Сам ставит<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'goal')">Цели стрима<span>+10</span></button></div></div>
-      <div class="param-row"><div class="param-label">Международный контекст<div class="param-hint">иностранные партнёры или реализация за рубежом</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'intl')">Нет<span>0 б</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'intl')">Да, впервые<span>+6</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'intl')">Да, повторно<span>+3</span></button></div></div>
+      <div class="param-row"><div class="param-label">Стейкхолдеры<div class="param-hint">сколько внутренних команд и людей в Яндексе вовлечено · стейкхолдер = внутренний, заказчик = внешний</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'st')">1–2<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'st')">3–5<span>+3</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'st')">6–10<span>+6</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'st')">10+<span>+8</span></button></div></div>
+      <div class="param-row"><div class="param-label">Неопределённость<div class="param-hint">есть ли ТЗ и прецеденты · шаблон = делали похожее раньше, критическая = задача впервые, непонятно как мерить результат</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'un')">Шаблон<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'un')">Частичная<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'un')">Высокая<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'un')">Критичная<span>+10</span></button></div></div>
+      <div class="param-row"><div class="param-label">Дедлайн<div class="param-hint">насколько срок предсказуем · гибкий = дата известна заранее, можно планировать · жёсткий = поставлен извне, перенести невозможно</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'dl')">Гибкий<span>0 б</span></button><button class="param-btn" data-val="2" onclick="selectParam(this,'dl')">Умеренный<span>+2</span></button><button class="param-btn" data-val="5" onclick="selectParam(this,'dl')">Жёсткий<span>+5</span></button></div></div>
+      <div class="param-row"><div class="param-label">Лиды / охват аудитории<div class="param-hint">количество людей, которых касается проект</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'aud')">до 100<span>0 б</span></button><button class="param-btn" data-val="2" onclick="selectParam(this,'aud')">100–1к<span>+2</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'aud')">1к–3к<span>+3</span></button><button class="param-btn" data-val="5" onclick="selectParam(this,'aud')">3к–5к<span>+5</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'aud')">5к–10к<span>+7</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'aud')">10к+<span>+8</span></button></div></div>
+      <div class="param-row"><div class="param-label">Стратегическая значимость<div class="param-hint">уровень импакта: только внутри продукта → для стрима → для компании → флагман</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'str')">Операционная<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'str')">Стрим<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'str')">Компания<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'str')">Флагман<span>+10</span></button></div></div>
+      <div class="param-row"><div class="param-label">Команда в подчинении<div class="param-hint">люди в прямом управлении у PM на этом проекте</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'team')">Нет<span>0 б</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'team')">1–2<span>+3</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'team')">3–5<span>+6</span></button><button class="param-btn" data-val="8" onclick="selectParam(this,'team')">6+<span>+8</span></button></div></div>
+      <div class="param-row"><div class="param-label">Целеполагание<div class="param-hint">кто формулирует цели проекта: руководитель ставит сверху — или PM участвует — или ставит сам</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'goal')">Заданы сверху<span>0 б</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'goal')">Участвует<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'goal')">Сам ставит<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'goal')">Цели стрима<span>+10</span></button></div></div>
+      <div class="param-row"><div class="param-label">Международный контекст<div class="param-hint">есть ли иностранные партнёры или реализация за рубежом · языковой барьер, разница в законодательстве, часовые пояса</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'intl')">Нет<span>0 б</span></button><button class="param-btn" data-val="6" onclick="selectParam(this,'intl')">Да, впервые<span>+6</span></button><button class="param-btn" data-val="3" onclick="selectParam(this,'intl')">Да, повторно<span>+3</span></button></div></div>
+      <div class="param-row"><div class="param-label">Отбор<div class="param-hint">есть ли отбор участников, сколько этапов, проводит ли PM самостоятельно</div></div><div class="param-opts"><button class="param-btn selected" data-val="0" onclick="selectParam(this,'sel')">Нет отбора<span>0 б</span></button><button class="param-btn" data-val="2" onclick="selectParam(this,'sel')">Анкета<span>+2</span></button><button class="param-btn" data-val="4" onclick="selectParam(this,'sel')">Анкета + тест<span>+4</span></button><button class="param-btn" data-val="7" onclick="selectParam(this,'sel')">+ интервью<span>+7</span></button><button class="param-btn" data-val="10" onclick="selectParam(this,'sel')">Многоэтапный<span>+10</span></button></div></div>
     </div>
 
     <div class="calc-result" id="calcResult">
@@ -602,7 +603,7 @@ const SIZES = {
 };
 
 const TYPE_ICONS = { event:'🎤', program:'📚', набор:'🎯', camp:'⛺', digital:'💻', other:'📁' };
-const TYPE_NAMES = { event:'Мероприятие', program:'Образовательная программа', набор:'Набор', camp:'Кемп', digital:'Цифровой продукт', other:'Другой проект' };
+const TYPE_NAMES = { event:'Мероприятие', program:'Образовательная программа', набор:'Набор', camp:'Кемп и интенсив', digital:'Цифровой продукт', other:'Другой проект' };
 
 const QUESTIONS = {
   event: [
@@ -614,12 +615,10 @@ const QUESTIONS = {
     { id:'e6', text:'Есть внешнее промо за пределами внутренних чатов и рассылок по базе?', hint:'Плакаты, посты в SM ЯО, PR-материалы, внешний сайт — это внешнее промо.', yes:'R:M', no:'R:S' },
   ],
   program: [
-    { id:'p1', text:'Программа запускается впервые?', hint:'Повторный запуск с готовым контентом и без внешних партнёров — сразу ниже по размеру.', yes:'p2', no:'p4' },
-    { id:'p2', text:'Есть внешние партнёры или контент разрабатывается с нуля с привлечением внешних экспертов?', hint:'Только внутренняя команда без партнёров — M. Внешние эксперты или вуз-партнёр — L и выше.', yes:'p3', no:'R:M' },
-    { id:'p3', text:'Федеральный масштаб или несколько крупных партнёров одновременно?', hint:'Один партнёр, один поток — L. Несколько регионов или партнёров — XL.', yes:'p_xxl_check', no:'R:L' },
-    { id:'p_xxl_check', text:'Программа внедряет принципиально новый формат образования или дизраптивна для рынка?', hint:'Ставка компании, новая модель которой не было — XXL. Масштабный запуск в рамках известного формата — XL.', yes:'R:XXL', no:'R:XL' },
-    { id:'p4', text:'Повторный запуск с существенными изменениями: новый формат, аудитория или партнёры?', hint:'Только обновление контента — S/M. Новая аудитория или структура — M/L.', yes:'p5', no:'R:S' },
-    { id:'p5', text:'Изменения затрагивают партнёрства или выход в новую аудиторию?', hint:'', yes:'R:L', no:'R:M' },
+    { id:'p1', text:'Есть внешние партнёры (вузы, институции) или контент создаётся с внешними экспертами?', hint:'Только внутренняя команда без партнёров — S или M. Внешние эксперты или вуз-партнёр — L и выше.', yes:'p2', no:'p_internal' },
+    { id:'p2', text:'Федеральный масштаб или несколько крупных партнёров одновременно?', hint:'Один партнёр, один поток — L. Несколько регионов или партнёров — XL.', yes:'p_xxl_check', no:'R:L' },
+    { id:'p_xxl_check', text:'Программа внедряет принципиально новый формат образования или дизраптивна для рынка?', hint:'Ставка компании, новая модель которой не было на рынке — XXL. Масштабный запуск в рамках известного формата — XL.', yes:'R:XXL', no:'R:XL' },
+    { id:'p_internal', text:'Есть внешнее промо или программа охватывает новую аудиторию?', hint:'Только текущая аудитория без внешнего промо — S. Внешнее промо или новая аудитория — M.', yes:'R:M', no:'R:S' },
   ],
   набор: [
     { id:'n1', text:'Набор федеральный — несколько городов или онлайн на всю страну?', hint:'Один город или один вуз — ниже. Федеральный охват — выше.', yes:'n2', no:'n3' },
@@ -627,7 +626,8 @@ const QUESTIONS = {
     { id:'n3', text:'Масштабная промо-кампания: внешние каналы, PR, digital?', hint:'Только рассылки и посты в чатах — S. Внешняя кампания — M.', yes:'R:M', no:'R:S' },
   ],
   camp: [
-    { id:'c1', text:'Кемп для новой внешней аудитории с внешними партнёрами или публичным промо?', hint:'Внутренний кемп для текущих студентов — M. Внешний с партнёрами — L и выше.', yes:'c2', no:'R:M' },
+    { id:'c1', text:'Кемп для новой внешней аудитории с внешними партнёрами или публичным промо?', hint:'Внутренний кемп для текущих студентов — S или M. Внешний с партнёрами — L и выше.', yes:'c2', no:'c_internal' },
+    { id:'c_internal', text:'Большой масштаб: несколько потоков, расширенный формат или новая аудитория без партнёров?', hint:'Один маленький поток для своих — S. Несколько потоков или расширенный формат — M.', yes:'R:M', no:'R:S' },
     { id:'c2', text:'Масштаб большой: несколько треков, сотни участников, несколько партнёров или федеральный охват?', hint:'Один поток, один партнёр — L. Масштабный кемп — XL.', yes:'R:XL', no:'R:L' },
   ],
   digital: [
@@ -665,7 +665,8 @@ const RESULTS = {
     XL:{ desc:'Масштабный набор с участием нескольких крупных партнёров или GR-структур.', examples:'Федеральный набор с Минобром, партнёрский набор с несколькими вузами и бигтехами.', criteria:{'Партнёры':'Несколько крупных, GR или госструктуры','Масштаб':'Федеральный охват'} },
   },
   camp: {
-    M:{ desc:'Внутренний кемп для текущих студентов или школьников без внешних партнёров.', examples:'Кемп для действующих студентов программы, внутренний интенсив.', criteria:{'Аудитория':'Текущие студенты или школьники','Промо':'Внутреннее','Партнёры':'Нет внешних'} },
+    S:{ desc:'Небольшой внутренний кемп или интенсив для текущих студентов, один поток.', examples:'Короткий внутренний интенсив, мини-кемп для действующих студентов программы.', criteria:{'Аудитория':'Текущие студенты или школьники','Масштаб':'Один небольшой поток','Промо':'Внутреннее','Партнёры':'Нет внешних'} },
+    M:{ desc:'Кемп для внутренней аудитории с расширенным форматом или несколькими потоками.', examples:'Кемп для действующих студентов программы, внутренний интенсив нескольких потоков.', criteria:{'Аудитория':'Текущие студенты или школьники','Масштаб':'Несколько потоков или расширенный формат','Промо':'Внутреннее','Партнёры':'Нет внешних'} },
     L:{ desc:'Кемп с внешними партнёрами или для новой аудитории с внешним промо.', examples:'Партнёрский кемп с вузом, открытый образовательный интенсив.', criteria:{'Аудитория':'Новая или внешняя','Партнёры':'Один внешний партнёр','Промо':'Внешнее'} },
     XL:{ desc:'Масштабный кемп с несколькими треками, сотнями участников и несколькими крупными партнёрами.', examples:'Федеральный студенческий кемп, многопоточный интенсив с бигтехами.', criteria:{'Масштаб':'Сотни участников, несколько треков','Партнёры':'Несколько крупных или федеральный охват'} },
   },
@@ -686,7 +687,7 @@ const RESULTS = {
 
 let calcSizePts = 0;
 let calcLaunchK = 1.5;
-let calcParams = {st:0,un:0,dl:0,aud:0,str:0,team:0,goal:0,intl:0};
+let calcParams = {st:0,un:0,dl:0,aud:0,str:0,team:0,goal:0,intl:0,sel:0};
 
 function openCalc() {
   document.getElementById('resultArea').style.display = 'none';
@@ -875,7 +876,7 @@ function confirmSave() {
     goal: ['Заданы сверху','Участвует','Сам ставит','Цели стрима'],
     intl: ['Нет','Да, впервые','Да, повторно'],
   };
-  const paramNames = {st:'Стейкхолдеры',un:'Неопределённость',dl:'Дедлайн',aud:'Охват',str:'Значимость',team:'Команда',goal:'Целеполагание',intl:'Международный'};
+  const paramNames = {st:'Стейкхолдеры',un:'Неопределённость',dl:'Дедлайн',aud:'Лиды/охват',str:'Значимость',team:'Команда',goal:'Целеполагание',intl:'Международный',sel:'Отбор'};
   const paramVals = [0,3,6,8];
   const details = {};
   Object.keys(calcParams).forEach(k => {
